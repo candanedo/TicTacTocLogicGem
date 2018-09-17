@@ -15,53 +15,31 @@ class TicTacToe
 # Metodo que se encarga de ejecutar la accion de cada jugador dependiendo de los
 # parametros que se envien al metodo instanciado.
 	def conditions_game turno, player
-		if player
-			case turno
-				when 1
-					@grid[0][0] = "X"
-				when 2
-					@grid[0][1] = "X"
-				when 3
-					@grid[0][2] = "X"
-				when 4
-					@grid[1][0] = "X"
-				when 5
-					@grid[1][1] = "X"
-				when 6
-					@grid[1][2] = "X"
-				when 7
-					@grid[2][0] = "X"
-				when 8
-					@grid[2][1] = "X"
-				when 9
-					@grid[2][2] = "X"
-				else
-					puts "Error"
+		
+		symbol = player ? "X" : "O"
+		puts symbol
+		case turno
+			when 1
+				@grid[0][0] = symbol
+			when 2
+				@grid[0][1] = symbol
+			when 3
+				@grid[0][2] = symbol
+			when 4
+				@grid[1][0] = symbol
+			when 5
+				@grid[1][1] = symbol
+			when 6
+				@grid[1][2] = symbol
+			when 7
+				@grid[2][0] = symbol
+			when 8
+				@grid[2][1] = symbol
+			when 9
+				@grid[2][2] = symbol
+			else
+				return {:data => "Error Fuera de Matriz", :status => false}
 			end
-		elsif !player
-			case turno
-				when 1
-					@grid[0][0] = "O"
- 				when 2
-					@grid[0][1] = "O"
-				when 3
-					@grid[0][2] = "O"
-				when 4
-					@grid[1][0] = "O"
-				when 5
-					@grid[1][1] = "O"
-				when 6
-					@grid[1][2] = "O"
-				when 7
-					@grid[2][0] = "O"
-				when 8
-					@grid[2][1] = "O"
-				when 9
-					@grid[2][2] = "O"
-				else
-					puts "Error"
-			end
-		end
 	end
 
 # Metodo que se encarga de validar si alguno de los jugadores quiere utilizar un
@@ -88,13 +66,12 @@ class TicTacToe
 			when 9
 				return @grid[2][2] == "X" || @grid[2][2] == "O" ? false : true
 			else
-				return true
+				return {:data => "Error Fuera de Matriz", :status => false}
 		end
 	end
 # Metodo que se encarga de validar si existe un ganador de acuerdo al juego TicTacToe
 # Evalua en manera horizontal, vertical, y diagonalmente.
 	def winner
-		puts
 		#Condiciones para diagonal
 		return false if @grid[0][0] == @grid[1][1] && @grid[1][1] == @grid[2][2]
 		return false if @grid[0][2] == @grid[1][1] && @grid[1][1] == @grid[2][0]
@@ -113,66 +90,32 @@ grid = [["1", "2", "3"],["4", "5", "6"],["7", "8", "9"]]
 game_on = true
 contador = 0
 ttt = TicTacToe.new(grid)
-player_1 = true
-player_2 = false
+player = true
 
-while game_on
+
+while game_on || contador < 10
 	contador += 1
-	puts " "
-	puts "------------------"
-	puts " "
-	ttt.display_grid
-#..........................JUGADOR 1 X..........................................
-
-	if player_1
-		puts
-		puts "------------------"
-		puts "Turno jugador 1: "
-		puts "------------------"
-		move_p1 = gets.to_i
+	move = gets.to_i
 
 
-		if ttt.validate(move_p1) == true
-			ttt.conditions_game(move_p1, true)
-		else
-			while ttt.validate(move_p1) == false
-				puts "Ese espacio ya fue utilizada ingrese de nuevo un comando"
-				move_p1 = gets.to_i
-			end
-			ttt.conditions_game(move_p1, true)
+	if ttt.validate(move) == true
+		ttt.conditions_game(move, player)
+	else
+		while ttt.validate(move) == false
+			return {:data => "Error ese campo ya fue utilizado por el oponente", :status => false}
+			move_p1 = gets.to_i
 		end
-
-		if ttt.winner == false
-			puts "El Ganador es el Jugador 1 (x)"
-			game_on = false
-		end
-		player_1 = false
-		player_2 = true
-#..........................JUGADOR 2 O..........................................
-	elsif player_2
-		puts puts
-		puts "------------------"
-		puts "Turno jugador 2:"
-		puts "------------------"
-		move_p2 = gets.to_i
-
-		if ttt.validate(move_p2) == true
-			ttt.conditions_game(move_p2, false)
-		else
-			while ttt.validate(move_p2) == false
-				puts "Ese espacio ya fue utilizada ingrese de nuevo un comando"
-				move_p2 = gets.to_i
-			end
-			ttt.conditions_game(move_p2, false)
-		end
-
-		if ttt.winner == false
-			puts "El Ganador es el Jugador 2 (O)"
-			game_on = false
-		end
-		player_1 = true
-		player_2 = false
+		ttt.conditions_game(move, player)
 	end
-	ttt.display_grid
+
+	if ttt.winner == false
+		
+		game_on = false
+		return {:data => player, :status => true} 
+	end
+
+
+	player = !player
+#..........................JUGADOR 2 O..........................................
 end
-puts "End of Game"
+
