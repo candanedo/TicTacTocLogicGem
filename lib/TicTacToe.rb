@@ -31,7 +31,7 @@ class TicTacToe
 			when 9
 				@grid[2][2] = command
 			else
-				puts "Error"
+				return "Error"
 		end
 		return @grid
 	end
@@ -60,7 +60,6 @@ class TicTacToe
 		end
 	end
 	def winner
-		puts
 		return false if @grid[0][0] == @grid[1][1] && @grid[1][1] == @grid[2][2]
 		return false if @grid[0][2] == @grid[1][1] && @grid[1][1] == @grid[2][0]
 		return false if @grid[0][2] == @grid[1][1] && @grid[1][1] == @grid[2][0]
