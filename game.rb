@@ -16,10 +16,10 @@ while game_on && count < 9
 	puts "Turno jugador #{helper}: "
 	puts "------------------"
 	move = gets.to_i
-	if ttt.validate(move)
+	if ttt.validate?(move)
 		ttt.conditions_game(move, player)
 	else
-		while ttt.validate(move) == false
+		while ttt.validate?(move) == false
 			puts "Ese espacio ya fue utilizada o esta utilizando un comando incorrecto ingrese de nuevo un comando"
 			move = gets.to_i
 		end
